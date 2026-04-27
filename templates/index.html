@@ -1,34 +1,60 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-        <h2 class="mb-4">Today's Adherence</h2>
+    <div class="col-md-8">
         
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h3 class="h5 text-muted">Status for Today:</h3>
-                {% if last_log %}
-                    <div class="alert {% if last_log.status == 'Taken' %}alert-success{% else %}alert-warning{% endif %}">
-                        <strong>{{ last_log.status }}</strong> at {{ last_log.timestamp.strftime('%H:%M %p') }}
-                    </div>
-                {% else %}
-                    <div class="alert alert-secondary">No activity logged yet.</div>
-                {% endif %}
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Daily Adherence Logger</h2>
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                <form action="/log/Taken" method="POST">
+                    <button type="submit" class="btn btn-success btn-lg px-5 shadow">LOG: TAKEN</button>
+                </form>
+                <form action="/log/Skipped" method="POST">
+                    <button type="submit" class="btn btn-outline-danger btn-lg px-5">LOG: SKIPPED</button>
+                </form>
             </div>
         </div>
 
-        <div class="d-grid gap-3">
-            <form action="/log/Taken" method="POST">
-                <button type="submit" class="btn btn-success btn-lg w-100 py-3 shadow">
-                    LOG AS: TAKEN
-                </button>
-            </form>
-            <form action="/log/Skipped" method="POST">
-                <button type="submit" class="btn btn-outline-danger btn-lg w-100 py-3">
-                    LOG AS: SKIPPED
-                </button>
-            </form>
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">Adherence History</h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th class="text-end">Verification</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in history %}
+                            <tr>
+                                <td>{{ log.timestamp.strftime('%B %d, %Y') }}</td>
+                                <td>
+                                    <span class="badge {% if log.status == 'Taken' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                        {{ log.status }}
+                                    </span>
+                                </td>
+                                <td class="text-end text-muted small">
+                                    Logged at {{ log.timestamp.strftime('%H:%M:%S') }}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">
+                                    No history found. Start logging to build your Adherence Confidence.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
     </div>
 </div>
 {% endblock %}
