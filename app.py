@@ -3,7 +3,7 @@ from datetime import datetime, time
 from flask import Flask, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/static")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///vita_win.db"
 db = SQLAlchemy(app)
 
